@@ -11,6 +11,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import { Audiencies } from "../audiencie/audiencies";
 import { UpdateAudience } from "../audiencie/updateAudience";
 import { Campaign } from "../campaign/Campaign";
+import { Contacts } from "../contact/Contacts";
 
 export const Routing = () => {
   return (
@@ -44,6 +45,7 @@ export const Routing = () => {
           <Route index element={<Home />} />
           <Route path="audiences" element={<Audiencies />} />
           <Route path="updateaudience/:id" element={<UpdateAudience />} />
+          <Route path="contacts" element={<Contacts />} />
           <Route path="logout" element={<Logout />} />
           <Route path="campaign" element={<Campaign />} />
         </Route>

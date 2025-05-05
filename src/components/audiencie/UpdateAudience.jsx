@@ -100,10 +100,10 @@ export const UpdateAudience = () => {
             value={form.contactName}
             onChange={changed}
             className="w-full border p-2 rounded"
-            placeholder={getData.map((data) => 
-            <li key="_id">
+            /*placeholder={getData.map((data) => 
+            <li key={data._id}>
                 {data.contacts.name}
-            </li>)}
+            </li>)}*/
           />
         </div>
         <div>
