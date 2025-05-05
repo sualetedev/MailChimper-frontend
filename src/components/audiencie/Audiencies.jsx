@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useFormArray from "../hooks/useFormArray";
 import { useNavigate } from "react-router-dom";
-import { getContacts } from "../contact/getContacts"
+import { fetchContacts } from "../contact/getContacts"
 
 export const Audiencies = () => {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ export const Audiencies = () => {
   const [audiences, setAudiences] = useState([]);
   const [createdAudience, setCreatedAudience] = useState(false);
   const [createdErrorAudience, setCreatedErrorAudience] = useState(false);
+  const [createForm, setCreateForm] = useState(false);
 
   const [form, changed] = useFormArray({
     name: "",
@@ -80,7 +81,7 @@ export const Audiencies = () => {
 
   useEffect(() => {
     if (createForm) {
-      getContacts().then((data) => setContacts(data));
+      fetchContacts().then((data) => setContacts(data));
     }
   }, [createForm]);
 
