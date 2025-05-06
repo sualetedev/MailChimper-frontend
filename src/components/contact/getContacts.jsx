@@ -1,13 +1,18 @@
+// fetchContacts.js
 export const fetchContacts = async () => {
-  const response = await fetch(
-    'http://localhost:3900/api/contact/getContactsByUser',
-    {
-      method: "GET",
+  try {
+    const request = await fetch("http://localhost:3900/api/contact/getContactsByUser", {
       headers: {
-        "Content-Type": "application/json",
         Authorization: localStorage.getItem("token"),
       },
+    });
+    const response = await request.json();
+
+    if (response.status === "success") {
+      return response.contacts || [];
     }
-  );
-  return await response.json();
+  } catch (error) {
+    console.error("Error fetching contacts", error);
+    return [];
+  }
 };

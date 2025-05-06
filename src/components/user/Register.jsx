@@ -6,11 +6,8 @@ export const Register = () => {
   const [saved, setSaved] = useState("not sended");
 
   const saveUser = async (e) => {
-    //Prevenir actualización de pantalla
     e.preventDefault();
-    //Recoger los datos del formulario
     let newUser = form;
-    //Guardar el usuario en el backend
     const request = await fetch("http://localhost:3900/api/user/register", {
       method: "POST",
       headers: {
@@ -37,7 +34,7 @@ export const Register = () => {
           </header>
           <div className="">
             {saved == "saved" ? (
-              <strong className="green-600">
+              <strong className="text-green-800">
                 Usuario registrado correctamente
               </strong>
             ) : (

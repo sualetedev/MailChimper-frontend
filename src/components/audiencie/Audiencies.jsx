@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useFormArray from "../hooks/useFormArray";
 import { useNavigate } from "react-router-dom";
-import { fetchContacts } from "../contact/getContacts"
+import { fetchContacts } from "../contact/getContacts";
 
 export const Audiencies = () => {
   const navigate = useNavigate();
@@ -13,19 +13,24 @@ export const Audiencies = () => {
   const [createdAudience, setCreatedAudience] = useState(false);
   const [createdErrorAudience, setCreatedErrorAudience] = useState(false);
   const [createForm, setCreateForm] = useState(false);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedLocations, setSelectedLocations] = useState([]);
 
   const [form, changed] = useFormArray({
     name: "",
   });
 
   const getAudiences = async () => {
-    const request = await fetch("http://localhost:3900/api/audience/getAudience", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-    });
+    const request = await fetch(
+      "http://localhost:3900/api/audience/getAudience",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
     const response = await request.json();
     if (response.status === "success") {
       setAudiences(response.audiences);
@@ -42,33 +47,40 @@ export const Audiencies = () => {
       contacts: selectedContacts,
     };
 
-    const request = await fetch("http://localhost:3900/api/audience/createAudience", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-      body: JSON.stringify(payload),
-    });
+    const request = await fetch(
+      "http://localhost:3900/api/audience/createAudience",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     const response = await request.json();
     if (response.status === "success") {
       setCreatedAudience(true);
       setCreateForm(false);
       getAudiences();
+      setCreatedErrorAudience(false);
     } else {
       setCreatedErrorAudience(true);
     }
   };
 
   const deleteAudience = async (audienceId) => {
-    const request = await fetch("http://localhost:3900/api/audience/deleteAudience/" + audienceId, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-    });
+    const request = await fetch(
+      "http://localhost:3900/api/audience/deleteAudience/" + audienceId,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
     const response = await request.json();
     if (response.status === "success") {
       setAudiences(audiences.filter((audience) => audience._id !== audienceId));
@@ -77,11 +89,11 @@ export const Audiencies = () => {
     }
   };
 
- 
-
   useEffect(() => {
     if (createForm) {
-      fetchContacts().then((data) => setContacts(data));
+      fetchContacts().then((data) => {
+        setContacts(data);
+      });
     }
   }, [createForm]);
 
@@ -104,7 +116,9 @@ export const Audiencies = () => {
 
       <div className="ml-110 mt-5 text-3xl">
         {createdAudience && (
-          <strong className="text-green-600">Audiencia creada correctamente</strong>
+          <strong className="text-green-600">
+            Audiencia creada correctamente
+          </strong>
         )}
         {createdErrorAudience && (
           <strong className="text-red-600">Error al crear audiencia</strong>
@@ -114,68 +128,106 @@ export const Audiencies = () => {
       {createForm && (
         <div className="max-w-md mx-auto mt-6 bg-white p-4 rounded shadow">
           <h2 className="text-xl font-bold mb-4">Crear nueva audiencia</h2>
-          <form onSubmit={createAudience} className="space-y-4">
-            <div>
-              <label className="block">Nombre de la audiencia</label>
-              <input
+          <input
                 type="text"
                 name="name"
                 value={form.name}
                 onChange={changed}
                 className="w-full border p-2 rounded"
               />
+          <form onSubmit={createAudience} className="space-y-4">
+            <div>
+              <label className="block font-semibold">Filtrar por tags</label>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {Array.from(new Set(contacts.flatMap((c) => c.tags || []))).map(
+                  (tag) => (
+                    <label key={tag} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        value={tag}
+                        checked={selectedTags.includes(tag)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (e.target.checked) {
+                            setSelectedTags([...selectedTags, value]);
+                          } else {
+                            setSelectedTags(
+                              selectedTags.filter((t) => t !== value)
+                            );
+                          }
+                        }}
+                      />
+                      <span>{tag}</span>
+                    </label>
+                  )
+                )}
+              </div>
+
+              <label className="block font-semibold">
+                Filtrar por ubicación
+              </label>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {Array.from(
+                  new Set(contacts.map((c) => c.location).filter(Boolean))
+                ).map((loc) => (
+                  <label key={loc} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      value={loc}
+                      checked={selectedLocations.includes(loc)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (e.target.checked) {
+                          setSelectedLocations([...selectedLocations, value]);
+                        } else {
+                          setSelectedLocations(
+                            selectedLocations.filter((l) => l !== value)
+                          );
+                        }
+                      }}
+                    />
+                    <span>{loc}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             <div>
-              <label className="block">Filtrar por tag</label>
-              <input
-                type="text"
-                value={filterTag}
-                onChange={(e) => setFilterTag(e.target.value)}
-                className="w-full border p-2 rounded"
-                placeholder="Ej: cliente"
-              />
-            </div>
+              <label className="block mb-2">Seleccionar contactos</label>
+              <div className="max-h-40 overflow-y-auto space-y-2 border rounded p-2">
+              {contacts
+  .filter((c) => {
+    const byTag =
+      selectedTags.length === 0 ||
+      c.tags?.some((t) => selectedTags.includes(t));
+    const byLocation =
+      selectedLocations.length === 0 ||
+      selectedLocations.includes(c.location);
+    return byTag && byLocation;
+  })
+  .map((c) => (
+    <label key={c._id} className="block">
+      <input
+        type="checkbox"
+        value={c._id}
+        checked={selectedContacts.includes(c._id)}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (e.target.checked) {
+            setSelectedContacts([...selectedContacts, value]);
+          } else {
+            setSelectedContacts(
+              selectedContacts.filter((id) => id !== value)
+            );
+          }
+        }}
+        className="mr-2"
+      />
+      {c.name} ({c.email}) - {c.location}
+    </label>
+  ))}
 
-            <div>
-              <label className="block">Filtrar por ubicación</label>
-              <input
-                type="text"
-                value={filterLocation}
-                onChange={(e) => setFilterLocation(e.target.value)}
-                className="w-full border p-2 rounded"
-                placeholder="Ej: Madrid"
-              />
-            </div>
-
-            <div>
-              <label className="block">Seleccionar contactos</label>
-              <select
-                multiple
-                value={selectedContacts}
-                onChange={(e) =>
-                  setSelectedContacts(Array.from(e.target.selectedOptions, (o) => o.value))
-                }
-                className="w-full border p-2 rounded h-40"
-              >
-                {contacts
-                  .filter((c) => {
-                    const byTag = filterTag
-                      ? c.tags?.some((t) =>
-                          t.toLowerCase().includes(filterTag.toLowerCase())
-                        )
-                      : true;
-                    const byLocation = filterLocation
-                      ? c.location?.toLowerCase().includes(filterLocation.toLowerCase())
-                      : true;
-                    return byTag && byLocation;
-                  })
-                  .map((c) => (
-                    <option key={c._id} value={c._id}>
-                      {c.name} ({c.email}) - {c.location}
-                    </option>
-                  ))}
-              </select>
+              </div>
             </div>
 
             <button
@@ -220,7 +272,9 @@ export const Audiencies = () => {
                   <td className="border-l black">
                     <button
                       className="bg-blue-500 text-white ml-15 px-5 py-3 rounded mt-1 cursor-pointer"
-                      onClick={() => navigate("/home/updateaudience/" + audiencia._id)}
+                      onClick={() =>
+                        navigate("/home/updateaudience/" + audiencia._id)
+                      }
                     >
                       Actualizar
                     </button>
