@@ -62,6 +62,7 @@ export const UpdateTemplate = () => {
               const response = await request.json();
               if (response.status === "success") {
                 setTemplateHandled(response.template);
+                navigate("/home/campaign");
               }
           
         } catch ( error ){

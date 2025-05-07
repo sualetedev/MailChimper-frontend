@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 export const Campaign = () => {
   const [templateHandled, setTemplateHandled] = useState([]);
   const [templateOwn, setTemplateOwn] = useState([]);
+  const [audiences, setAudiences] = useState([]);
+  const [selectedAudiences, setSelectedAudiences] = useState([]);
   const navigate = useNavigate();
 
   const getPublicTemplates = async () => {
@@ -20,7 +22,6 @@ export const Campaign = () => {
     const response = await request.json();
     if (response.status === "success") {
       setTemplateHandled(response.templates);
-      
     }
   };
 
@@ -46,7 +47,82 @@ export const Campaign = () => {
   useEffect(() => {
     getPublicTemplates();
     getOwnTemplates();
+    getAudiences();
   }, []);
+
+  const deleteTemplate = async (id) => {
+    const request = await fetch(
+      "http://localhost:3900/api/templates/deleteTemplate/" + id,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+    const response = await request.json();
+
+    if (response.status === "success") {
+      console.log("borrado correcto");
+      setTemplateOwn(templateOwn.filter((template) => template._id !== id));
+    }
+  };
+
+  const getAudiences = async () => {
+    const res = await fetch("http://localhost:3900/api/audience/getAudience", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+    const data = await res.json();
+    if (data.status === "success") {
+      setAudiences(data.audiences);
+    }
+  };
+
+  const sendMessage = async (id) => {
+    if (selectedAudiences.length === 0) {
+      alert("Selecciona al menos una audiencia.");
+      return;
+    }
+  
+    const subject = prompt("Asunto del correo:");
+    if (!subject) return;
+  
+    const request = await fetch("http://localhost:3900/api/templates/getTemplateById/"+id , {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+  
+    const response = await request.json();
+    if (response.status !== "success") {
+      alert("No se pudo cargar la plantilla");
+      return;
+    }
+  
+    const html = await renderHtmlFromDesign(response.template.content);
+  
+    const sendRequest = await fetch("http://localhost:3900/api/send/multiple-audiences", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        audienceIds: selectedAudiences,
+        subject,
+        html,
+      }),
+    });
+  
+    const sendResponse = await sendRequest.json();
+    alert(sendResponse.message);
+  };
+  
 
   return (
     <div className="inline-block mt-5 ml-5">
@@ -69,7 +145,7 @@ export const Campaign = () => {
             <div key={template._id} className="bg-white rounded-2xl shadow p-6">
               <h2 className="font-bold text-xl mb-2">{template.name}</h2>
               <button
-                className="mt-2 ml-15 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="mt-2 ml-15 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
                 onClick={() => navigate(`/home/editor/${template._id}`)}
               >
                 Ver y editar template
@@ -89,11 +165,43 @@ export const Campaign = () => {
                   className="bg-white rounded-2xl shadow p-6"
                 >
                   <h2 className="font-bold text-xl mb-2">{template.name}</h2>
+                  <h2 className="text-lg font-bold mt-10">
+                    Selecciona audiencias para enviar
+                  </h2>
+                  <div className="flex flex-wrap gap-4 mt-2">
+                    {audiences.map((aud) => (
+                      <label
+                        key={aud._id}
+                        className="flex items-center space-x-2"
+                      >
+                        <input
+                          type="checkbox"
+                          value={aud._id}
+                          checked={selectedAudiences.includes(aud._id)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setSelectedAudiences((prev) =>
+                              e.target.checked
+                                ? [...prev, value]
+                                : prev.filter((id) => id !== value)
+                            );
+                          }}
+                        />
+                        <span>{aud.name}</span>
+                      </label>
+                    ))}
+                  </div>
                   <button
-                    className="mt-2 ml-20 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
-                    onClick={() => navigate(`/home/editor/${template._id}`)}
+                    className="mt-2 ml-10 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+                    onClick={() => sendMessage(template._id)}
                   >
                     Enviar
+                  </button>
+                  <button
+                    className="mt-2 ml-10 px-4 py-2 bg-red-600 text-white rounded cursor-pointer hover:bg-red-800"
+                    onClick={() => deleteTemplate(template._id)}
+                  >
+                    Borrar
                   </button>
                 </div>
               ))}
