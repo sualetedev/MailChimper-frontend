@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { fetchContacts } from "./getContacts";
 import useFormArray from "../hooks/useFormArray";
 
 export const Contacts = () => {
@@ -16,9 +15,16 @@ export const Contacts = () => {
   });
 
   const handleGetContacts = async () => {
-    const response = await fetchContacts(
-      "http://localhost:3900/contact/getContactsByUser"
+    const request = await fetch(
+      "http://localhost:3900/api/contact/getContactsByUser",{
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        }
+      }
     );
+    const response = await request.json();
     if (response.status === "success") {
       setContacts(response.contacts || []);
       console.log(contacts);
@@ -62,7 +68,6 @@ export const Contacts = () => {
       }
     );
     const response = await request.json();
-    console.log(response);
     if (response.status === "success") {
       setEliminatedContact(true);
       setCreated(false);

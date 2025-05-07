@@ -13,6 +13,9 @@ export default function Navbar() {
             <h1 className="text-2xl font-bold text-blue-600">MailChimper</h1>
           </Link>
         </div>
+        <div>
+          <p>Reto 1. Innovasur 2025</p>
+        </div>
 
         <div className="md:flex space-x-4">
           <Link to="home" className="text-gray-700 hover:text-blue-600">

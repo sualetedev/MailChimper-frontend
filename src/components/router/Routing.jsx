@@ -12,6 +12,7 @@ import { Audiencies } from "../audiencie/audiencies";
 import { UpdateAudience } from "../audiencie/updateAudience";
 import { Campaign } from "../campaign/Campaign";
 import { Contacts } from "../contact/Contacts";
+import { UpdateTemplate } from "../template/UpdateTemplate";
 
 export const Routing = () => {
   return (
@@ -48,6 +49,7 @@ export const Routing = () => {
           <Route path="contacts" element={<Contacts />} />
           <Route path="logout" element={<Logout />} />
           <Route path="campaign" element={<Campaign />} />
+          <Route path="editor/:id" element={<UpdateTemplate />} />
         </Route>
       </Routes>
     </AuthProvider>
