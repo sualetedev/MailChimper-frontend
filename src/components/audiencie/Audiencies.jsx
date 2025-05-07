@@ -7,20 +7,20 @@ export const Audiencies = () => {
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
-  const [filterTag, setFilterTag] = useState("");
-  const [filterLocation, setFilterLocation] = useState("");
   const [audiences, setAudiences] = useState([]);
   const [createdAudience, setCreatedAudience] = useState(false);
   const [createdErrorAudience, setCreatedErrorAudience] = useState(false);
   const [createForm, setCreateForm] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedLocations, setSelectedLocations] = useState([]);
+  const [ audienceTable, setAudienceTable] = useState(false);
 
   const [form, changed] = useFormArray({
     name: "",
   });
 
   const getAudiences = async () => {
+    setCreateForm(false);
     const request = await fetch(
       "http://localhost:3900/api/audience/getAudience",
       {
@@ -34,12 +34,14 @@ export const Audiencies = () => {
     const response = await request.json();
     if (response.status === "success") {
       setAudiences(response.audiences);
+      setAudienceTable(true);
     } else {
       console.log("Error al obtener las audiencias");
     }
   };
 
   const createAudience = async (e) => {
+    setAudienceTable(false);
     e.preventDefault();
 
     const payload = {
@@ -129,12 +131,12 @@ export const Audiencies = () => {
         <div className="max-w-md mx-auto mt-6 bg-white p-4 rounded shadow">
           <h2 className="text-xl font-bold mb-4">Crear nueva audiencia</h2>
           <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={changed}
-                className="w-full border p-2 rounded"
-              />
+            type="text"
+            name="name"
+            value={form.name}
+            onChange={changed}
+            className="w-full border p-2 rounded"
+          />
           <form onSubmit={createAudience} className="space-y-4">
             <div>
               <label className="block font-semibold">Filtrar por tags</label>
@@ -195,38 +197,37 @@ export const Audiencies = () => {
             <div>
               <label className="block mb-2">Seleccionar contactos</label>
               <div className="max-h-40 overflow-y-auto space-y-2 border rounded p-2">
-              {contacts
-  .filter((c) => {
-    const byTag =
-      selectedTags.length === 0 ||
-      c.tags?.some((t) => selectedTags.includes(t));
-    const byLocation =
-      selectedLocations.length === 0 ||
-      selectedLocations.includes(c.location);
-    return byTag && byLocation;
-  })
-  .map((c) => (
-    <label key={c._id} className="block">
-      <input
-        type="checkbox"
-        value={c._id}
-        checked={selectedContacts.includes(c._id)}
-        onChange={(e) => {
-          const value = e.target.value;
-          if (e.target.checked) {
-            setSelectedContacts([...selectedContacts, value]);
-          } else {
-            setSelectedContacts(
-              selectedContacts.filter((id) => id !== value)
-            );
-          }
-        }}
-        className="mr-2"
-      />
-      {c.name} ({c.email}) - {c.location}
-    </label>
-  ))}
-
+                {contacts
+                  .filter((c) => {
+                    const byTag =
+                      selectedTags.length === 0 ||
+                      c.tags?.some((t) => selectedTags.includes(t));
+                    const byLocation =
+                      selectedLocations.length === 0 ||
+                      selectedLocations.includes(c.location);
+                    return byTag && byLocation;
+                  })
+                  .map((c) => (
+                    <label key={c._id} className="block">
+                      <input
+                        type="checkbox"
+                        value={c._id}
+                        checked={selectedContacts.includes(c._id)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (e.target.checked) {
+                            setSelectedContacts([...selectedContacts, value]);
+                          } else {
+                            setSelectedContacts(
+                              selectedContacts.filter((id) => id !== value)
+                            );
+                          }
+                        }}
+                        className="mr-2"
+                      />
+                      {c.name} ({c.email}) - {c.location}
+                    </label>
+                  ))}
               </div>
             </div>
 
@@ -240,7 +241,7 @@ export const Audiencies = () => {
         </div>
       )}
 
-      {audiences.length > 0 && (
+      {audienceTable && (
         <>
           <h1 className="text-xl font-bold"> Tus audiencias guardadas: </h1>
           <table className="w-full mt-4 border black ">
