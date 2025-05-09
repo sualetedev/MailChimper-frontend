@@ -6,11 +6,11 @@ export default function Navbar() {
   const auth = useAuth();
 
   return (
-    <nav className="border-b shadow-md bg-yellow-300">
+    <nav className="border-b shadow-md bg-sky-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         <div className="flex-shrink-0">
           <Link to="home">
-            <h1 className="text-2xl font-bold text-black">MailChimper</h1>
+            <h1 className="text-2xl font-bold text-blue-600">MailChimper</h1>
           </Link>
         </div>
         <div className="text-2xl">

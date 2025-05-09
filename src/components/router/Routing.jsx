@@ -13,6 +13,7 @@ import { UpdateAudience } from "../audiencie/updateAudience";
 import { Campaign } from "../campaign/Campaign";
 import { Contacts } from "../contact/Contacts";
 import { UpdateTemplate } from "../template/UpdateTemplate";
+import { CampaignStat } from "../campaign/CampaignStat";
 
 export const Routing = () => {
   return (
@@ -50,6 +51,8 @@ export const Routing = () => {
           <Route path="logout" element={<Logout />} />
           <Route path="campaign" element={<Campaign />} />
           <Route path="editor/:id" element={<UpdateTemplate />} />
+          <Route path="editor/" element={<UpdateTemplate />} />
+          <Route path="campaignstats" element ={ <CampaignStat />} />
         </Route>
       </Routes>
     </AuthProvider>

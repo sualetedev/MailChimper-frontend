@@ -73,7 +73,7 @@ export const Login = () => {
               </label>
               <br />
               <input
-                className="bg-white border-black"
+                className="bg-white border-1 border-black"
                 type="email"
                 name="email"
                 onChange={changed}
@@ -84,7 +84,7 @@ export const Login = () => {
               <label htmlFor="password">Contraseña</label>
               <br />
               <input
-                className="bg-white"
+                className="bg-white border-1 border-black"
                 type="password"
                 name="password"
                 onChange={changed}

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 export const Campaign = () => {
   const [templateHandled, setTemplateHandled] = useState([]);
   const [templateOwn, setTemplateOwn] = useState([]);
+  const [campaignDate, setCampaignDate] = useState({});
+
   const navigate = useNavigate();
 
   const getPublicTemplates = async () => {
@@ -42,10 +44,27 @@ export const Campaign = () => {
       setTemplateOwn(response.templates);
     }
   };
-  useEffect(() => {
-    getPublicTemplates();
-    getOwnTemplates();
-  }, []);
+
+  const getCampaign = async () => {
+    const request = await fetch(
+      "http://localhost:3900/api/campaign/getCampaigns",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+    const response = await request.json();
+
+    if (response.status === "success") {
+      setCampaignDate(response);
+      console.log(response);
+    }
+
+    return response;
+  };
 
   const deleteTemplate = async (id) => {
     const request = await fetch(
@@ -66,18 +85,40 @@ export const Campaign = () => {
     }
   };
 
+  useEffect(() => {
+    getPublicTemplates();
+    getOwnTemplates();
+    getCampaign();
+  }, []);
+
   return (
     <div className="inline-block mt-5 ml-5">
       <div>
         <h1 className="text-4xl">
           Convierte los correos electrónicos y SMS en ingresos
         </h1>
+        
       </div>
       <div>
         <h2 className="text-xl">
           Consigue más aperturas, clics y ventas con la plataforma n.º 1 de
           email marketing y automatizaciones*, ahora con SMS.
         </h2>
+      </div>
+
+      <div className="flex justify-center align-center mt-10 mb-10">
+        <div>
+        <button
+              className="mt-2 ml-5 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+              onClick={() => navigate(`/home/editor/`)}
+            >
+              {" "}
+              Crear template{" "}
+            </button>
+        </div>
+        <div>
+        {campaignDate && <button className="mt-2 ml-25 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600" onClick={() => navigate('/home/campaignstats')}>Tus campañas</button>}
+        </div>
       </div>
       <div className="mt-5">
         <h1 className="text-2xl font-bold mb-4">Plantillas públicas</h1>
@@ -94,13 +135,12 @@ export const Campaign = () => {
               </button>
             </div>
           ))}
-
+          <div className="col-span-3">
+            <h1 className="text-2xl font-bold mb-4 mt-10">Tus templates</h1>{" "}
+            
+          </div>
           {templateOwn.length > 0 && (
             <>
-              <div className="col-span-3">
-                <h1 className="text-2xl font-bold mb-4 mt-10">Tus templates</h1>
-              </div>
-
               {templateOwn.map((template) => (
                 <div
                   key={template._id}

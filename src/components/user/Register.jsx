@@ -52,17 +52,17 @@ export const Register = () => {
               <div className="mt-2">
                 <label htmlFor="email">Email</label>
                 <br/>
-                <input className="bg-white " type="email" name="email" onChange={changed} />
+                <input className="bg-white border-1 border-black" type="email" name="email" onChange={changed} />
               </div>
               <div className="form-group">
                 <label htmlFor="password">Contraseña</label>
                 <br />
-                <input className="bg-white"type="password" name="password" onChange={changed} />
+                <input className="bg-white border-1 border-black"type="password" name="password" onChange={changed} />
               </div>
               <div className="form-group">
                 <label htmlFor="name">Nombre</label>
                 <br />
-                <input className="bg-white"type="text" name="name" onChange={changed} />
+                <input className="bg-white border-1 border-black"type="text" name="name" onChange={changed} />
               </div>
               <input
                 type="submit"

@@ -250,7 +250,6 @@ export const Audiencies = () => {
                 <th>Nombre</th>
                 <th>Contactos</th>
                 <th>Fecha de creación</th>
-                <th>Actualizar</th>
                 <th>Eliminar</th>
               </tr>
             </thead>
@@ -270,19 +269,10 @@ export const Audiencies = () => {
                   <td className="pl-14 border-l black">
                     {new Date(audiencia.createdAt).toLocaleDateString()}
                   </td>
+                  
                   <td className="border-l black">
                     <button
-                      className="bg-blue-500 text-white ml-15 px-5 py-3 rounded mt-1 cursor-pointer"
-                      onClick={() =>
-                        navigate("/home/updateaudience/" + audiencia._id)
-                      }
-                    >
-                      Actualizar
-                    </button>
-                  </td>
-                  <td className="border-l black">
-                    <button
-                      className="bg-red-500 ml-8 text-white px-7 py-3 rounded mt-1 cursor-pointer"
+                      className="bg-red-500 ml-40 text-white px-7 py-3 rounded mt-1 cursor-pointer"
                       onClick={() => deleteAudience(audiencia._id)}
                     >
                       Borrar

@@ -6,7 +6,7 @@ export const PrivateLayout = () => {
   return (
     <>
       <NavBar />
-      <div className="max-w-7xl mx-auto mt-5 box-border p-4 bg-sky-100 rounded-lg shadow-md h-screen">
+      <div className="max-w-7xl mx-auto mt-5">
         <Outlet />
       </div>
     </>

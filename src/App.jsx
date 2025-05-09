@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <section>
+        <section className="bg-sky-50 min-w-screen min-h-screen">
           <Routing />
         </section>
       </BrowserRouter>
