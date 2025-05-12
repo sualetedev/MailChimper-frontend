@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-export const useForm = (initialObj) => {
+export const useForm = (initial) => {
     
-    const [form, setForm] = useState(initialObj);
+    const [form, setForm] = useState(initial);
 
     const changed = ({target}) => { 
         const {name, value} = target;
@@ -11,9 +11,14 @@ export const useForm = (initialObj) => {
             [name]: value
         })
     }
+
+    const reset = () => {
+        setForm(initial);
+    }
     return ({
         form,
-        changed
+        changed,
+        reset
   })
 }
 

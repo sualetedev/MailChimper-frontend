@@ -4,13 +4,12 @@ import useFormArray from "../hooks/useFormArray";
 export const Contacts = () => {
   const [createForm, setCreateForm] = useState(false);
   const [contacts, setContacts] = useState([]);
-  const [createContactState, setCreateContactState] = useState({});
   const [eliminatedContact, setEliminatedContact] = useState(false);
   const [created, setCreated] = useState(false);
-  const [form, changed] = useFormArray({
+  const [form, changed, reset] = useFormArray({
     name: "",
     email: "",
-    tag: "",
+    tags: [""],
     location: "",
   });
 
@@ -50,6 +49,7 @@ export const Contacts = () => {
       setCreated(true);
       setCreateForm(false);
       setEliminatedContact(false);
+      reset();
 
       handleGetContacts();
     }
@@ -137,8 +137,8 @@ export const Contacts = () => {
                 <label className="block">Tag</label>
                 <input
                   type="text"
-                  name="tag"
-                  value={form.tag}
+                  name="tags"
+                  value={form.tags}
                   onChange={changed}
                   className="w-full border p-2 rounded"
                 />

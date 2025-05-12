@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-const useFormArray = (initialObj) => {
-  const [form, setForm] = useState(initialObj);
+const useFormArray = (initial) => {
+  const [form, setForm] = useState(initial);
 
   const changed = ({ target }) => {
     const { name, value } = target;
@@ -11,7 +11,11 @@ const useFormArray = (initialObj) => {
     });
   };
 
-  return [form, changed];
+  const reset = () => {
+    setForm(initial);
+}
+
+  return [form, changed, reset];
 };
 
 export default useFormArray;
