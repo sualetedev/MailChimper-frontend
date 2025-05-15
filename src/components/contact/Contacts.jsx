@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useFormArray from "../hooks/useFormArray";
+const api = import.meta.env.VITE_API_URL;
 
 export const Contacts = () => {
   const [createForm, setCreateForm] = useState(false);
@@ -15,7 +16,7 @@ export const Contacts = () => {
 
   const handleGetContacts = async () => {
     const request = await fetch(
-      "http://localhost:3900/api/contact/getContactsByUser",{
+      `${api}/api/contact/getContactsByUser`,{
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +34,7 @@ export const Contacts = () => {
   const createContact = async (e) => {
     e.preventDefault();
     const request = await fetch(
-      "http://localhost:3900/api/contact/createContact",
+      `${api}/api/contact/createContact`,
       {
         method: "POST",
         headers: {
@@ -57,7 +58,7 @@ export const Contacts = () => {
 
   const eliminateContact = async (email) => {
     const request = await fetch(
-      "http://localhost:3900/api/contact/eliminateContact",
+      `${api}/api/contact/eliminateContact`,
       {
         method: "DELETE",
         headers: {

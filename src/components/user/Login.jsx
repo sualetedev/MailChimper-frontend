@@ -3,6 +3,7 @@ import useAuth from "../hooks/useAuth";
 import useForm from "..//hooks/useForm";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+const api = import.meta.env.VITE_API_URL;
 
 export const Login = () => {
   const { form, changed } = useForm({});
@@ -24,7 +25,8 @@ export const Login = () => {
     if (email === "" || password === "") {
       alert("Rellena todos los campos");
     } else {
-      let request = await fetch("http://localhost:3900/api/user/login", {
+      let request = await fetch(
+      `${api}/api/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

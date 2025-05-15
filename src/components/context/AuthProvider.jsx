@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+const api = import.meta.env.VITE_API_URL;
 
 
 const AuthContext = createContext();
@@ -25,7 +26,8 @@ export const AuthProvider = ({ children }) => {
       const userObj = user;
       const userId = userObj.id;
       console.log(userId);
-      const request = await fetch ("http://localhost:3900/api/user/getProfile/" + userId, {
+      const request = await fetch (
+      `${api}/api/user/getProfile/` + userId, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

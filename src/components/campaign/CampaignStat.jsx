@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+const api = import.meta.env.VITE_API_URL;
 
 export const CampaignStat = () => {
   const [campaignDate, setCampaignDate] = useState([]);
 
   const getCampaign = async () => {
     const request = await fetch(
-      "http://localhost:3900/api/campaign/getCampaigns",
+      `${api}/api/campaign/getCampaigns`,
       {
         method: "GET",
         headers: {

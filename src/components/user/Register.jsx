@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "../hooks/useForm";
+const api = import.meta.env.VITE_API_URL;
 
 export const Register = () => {
   const { form, changed } = useForm({});
@@ -8,7 +9,8 @@ export const Register = () => {
   const saveUser = async (e) => {
     e.preventDefault();
     let newUser = form;
-    const request = await fetch("http://localhost:3900/api/user/register", {
+    const request = await fetch(
+      `${api}/api/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+const api = import.meta.env.VITE_API_URL;
 export const Campaign = () => {
   const [templateHandled, setTemplateHandled] = useState([]);
   const [templateOwn, setTemplateOwn] = useState([]);
@@ -8,9 +9,8 @@ export const Campaign = () => {
   const navigate = useNavigate();
 
   const getPublicTemplates = async () => {
-    console.log("Entro en getpublictemplates");
-    const request = await fetch(
-      "http://localhost:3900/api/templates/getPublicTemplates",
+       const request = await fetch(
+      `${api}/api/templates/getPublicTemplates`,
       {
         method: "GET",
         headers: {
@@ -27,7 +27,7 @@ export const Campaign = () => {
 
   const getOwnTemplates = async () => {
     const request = await fetch(
-      "http://localhost:3900/api/templates/getTemplates",
+      `${api}/api/templates/getTemplates`,
       {
         method: "GET",
         headers: {
@@ -47,7 +47,7 @@ export const Campaign = () => {
 
   const getCampaign = async () => {
     const request = await fetch(
-      "http://localhost:3900/api/campaign/getCampaigns",
+      `${api}/api/campaign/getCampaigns`,
       {
         method: "GET",
         headers: {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useFormArray from "../hooks/useFormArray";
 import { fetchContacts } from "../contact/getContacts";
+const api = import.meta.env.VITE_API_URL;
 
 export const Audiencies = () => {
   const [contacts, setContacts] = useState([]);
@@ -20,7 +21,7 @@ export const Audiencies = () => {
   const getAudiences = async () => {
     setCreateForm(false);
     const request = await fetch(
-      "http://localhost:3900/api/audience/getAudience",
+      `${api}/api/audience/getAudience`,
       {
         method: "GET",
         headers: {
@@ -48,7 +49,7 @@ export const Audiencies = () => {
     };
 
     const request = await fetch(
-      "http://localhost:3900/api/audience/createAudience",
+      `${api}/api/audience/createAudience`,
       {
         method: "POST",
         headers: {

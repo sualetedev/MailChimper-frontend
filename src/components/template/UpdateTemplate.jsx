@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import EmailEditor from "react-email-editor";
 import useFormArray from "../hooks/useFormArray";
-
+const api = import.meta.env.VITE_API_URL;
 
 export const UpdateTemplate = () => {
   const { id } = useParams();
@@ -31,16 +31,13 @@ export const UpdateTemplate = () => {
   }, [templateHandled]);
 
   const getTemplateById = async () => {
-    const request = await fetch(
-      `http://localhost:3900/api/templates/getTemplateById/${id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-      }
-    );
+    const request = await fetch(`${api}/api/templates/getTemplateById/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
     const response = await request.json();
     if (response.status === "success") {
       setTemplateHandled(response.template);
@@ -48,7 +45,7 @@ export const UpdateTemplate = () => {
   };
 
   const getAudiences = async () => {
-    const res = await fetch("http://localhost:3900/api/audience/getAudience", {
+    const res = await fetch(`${api}/api/audience/getAudience`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: localStorage.getItem("token"),
@@ -64,7 +61,7 @@ export const UpdateTemplate = () => {
     emailEditorRef.current.editor.exportHtml(async ({ design }) => {
       try {
         const request = await fetch(
-          `http://localhost:3900/api/templates/updateTemplate/${id}`,
+          `${api}/api/templates/updateTemplate/${id}`,
           {
             method: "PUT",
             headers: {
@@ -91,22 +88,19 @@ export const UpdateTemplate = () => {
   const createNewTemplate = async () => {
     emailEditorRef.current.editor.exportHtml(async ({ design }) => {
       try {
-        const request = await fetch(
-          `http://localhost:3900/api/templates/createTemplate`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: localStorage.getItem("token"),
-            },
-            body: JSON.stringify({
-              name: `${
-                templateHandled?.name?.trim() + "(copia)" || formInput.name
-              }`,
-              content: design,
-            }),
-          }
-        );
+        const request = await fetch(`${api}/api/templates/createTemplate`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            name: `${
+              templateHandled?.name?.trim() + "(copia)" || formInput.name
+            }`,
+            content: design,
+          }),
+        });
 
         const response = await request.json();
         if (response.status === "success") {
@@ -134,7 +128,7 @@ export const UpdateTemplate = () => {
     emailEditorRef.current.editor.exportHtml(async ({ html }) => {
       try {
         const createRequest = await fetch(
-          "http://localhost:3900/api/campaign/createCampaign",
+          `${api}/api/campaign/createCampaign`,
           {
             method: "POST",
             headers: {
@@ -160,45 +154,37 @@ export const UpdateTemplate = () => {
 
         const htmlWithId = html.replace(/{{campaignId}}/g, campaignId);
 
-        const sendRequest = await fetch(
-          `http://localhost:3900/api/send/sendtoAudience`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: localStorage.getItem("token"),
-            },
-            body: JSON.stringify({
-              audienceIds: selectedAudiences,
-              subject,
-              html: htmlWithId,
-            }),
-          }
-        );
+        const sendRequest = await fetch(`${api}/api/send/sendtoAudience`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            audienceIds: selectedAudiences,
+            subject,
+            html: htmlWithId,
+          }),
+        });
 
         const sendResponse = await sendRequest.json();
         alert(sendResponse.message);
 
-        await fetch(
-          "http://localhost:3900/api/campaign/updateHtml/" + campaignId,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: localStorage.getItem("token"),
-            },
-            body: JSON.stringify({
-              html: htmlWithId,
-            }),
-          }
-        );
+        await fetch(`${api}/api/campaign/updateHtml/` + campaignId, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            html: htmlWithId,
+          }),
+        });
       } catch (error) {
         console.error("Error en sendMessage:", error);
       }
     });
   };
-
-
 
   return (
     <div style={{ height: "100vh" }}>
