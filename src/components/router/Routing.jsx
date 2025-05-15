@@ -8,7 +8,7 @@ import { PrivateLayout } from "../layout/private/PrivateLayout";
 import { Logout } from "../user/Logout";
 import { AuthProvider } from "../context/AuthProvider";
 import ProtectedRoute from "./ProtectedRoute";
-import { Audiencies } from "../audiencie/audiencies";
+import { Audiences } from "../audience/Audience";
 import { Campaign } from "../campaign/Campaign";
 import { Contacts } from "../contact/Contacts";
 import { UpdateTemplate } from "../template/UpdateTemplate";
@@ -44,7 +44,7 @@ export const Routing = () => {
           }
         >
           <Route index element={<Home />} />
-          <Route path="audiences" element={<Audiencies />} />
+          <Route path="audiences" element={<Audiences />} />
           <Route path="contacts" element={<Contacts />} />
           <Route path="logout" element={<Logout />} />
           <Route path="campaign" element={<Campaign />} />

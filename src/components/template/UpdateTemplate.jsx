@@ -17,7 +17,6 @@ export const UpdateTemplate = () => {
   const [templateHandled, setTemplateHandled] = useState(null);
   const [audiences, setAudiences] = useState([]);
   const [selectedAudiences, setSelectedAudiences] = useState([]);
-  const [subject, setSubject] = useState(null);
 
   useEffect(() => {
     getTemplateById();

@@ -3,7 +3,7 @@ import useFormArray from "../hooks/useFormArray";
 import { fetchContacts } from "../contact/getContacts";
 const api = import.meta.env.VITE_API_URL;
 
-export const Audiencies = () => {
+export const Audiences = () => {
   const [contacts, setContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [audiences, setAudiences] = useState([]);
