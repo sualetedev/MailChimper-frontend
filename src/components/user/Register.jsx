@@ -1,16 +1,23 @@
 import React, { useState } from "react";
 import { useForm } from "../hooks/useForm";
 const api = import.meta.env.VITE_API_URL;
-
+const secPassword = (password) => {
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+  return regex.test(password);
+};
 export const Register = () => {
-  const { form, changed } = useForm({});
+  const { form, changed, reset } = useForm({});
   const [saved, setSaved] = useState("not sended");
+  const [secured, setSecured] = useState("");
 
   const saveUser = async (e) => {
     e.preventDefault();
+    if (!secPassword(form.password)) {
+      setSecured("weak");
+      return;
+    }
     let newUser = form;
-    const request = await fetch(
-      `${api}/api/user/register`, {
+    const request = await fetch(`${api}/api/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,6 +29,8 @@ export const Register = () => {
 
     if (data.status === "success") {
       setSaved("saved");
+      setSecured("");
+      reset();
     } else {
       setSaved("error");
     }
@@ -32,7 +41,7 @@ export const Register = () => {
         <div className="justify-center">
           <header>
             <h1 className="text-2xl">Registro</h1>
-            <hr/>
+            <hr />
           </header>
           <div className="">
             {saved == "saved" ? (
@@ -50,21 +59,45 @@ export const Register = () => {
             ) : (
               ""
             )}
+            {secured == "weak" ? (
+              <strong className="text-red-600">
+                La contraseña es demasiado débil. Debe tener al menos 8
+                caracteres, una mayúscula, una minúscula, un número y un
+                símbolo.
+              </strong>
+            ) : (
+              ""
+            )}
             <form className="" onSubmit={saveUser}>
               <div className="mt-2">
                 <label htmlFor="email">Email</label>
-                <br/>
-                <input className="bg-white border-1 border-black" type="email" name="email" onChange={changed} />
+                <br />
+                <input
+                  className="bg-white border-1 border-black"
+                  type="email"
+                  name="email"
+                  onChange={changed}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="password">Contraseña</label>
                 <br />
-                <input className="bg-white border-1 border-black"type="password" name="password" onChange={changed} />
+                <input
+                  className="bg-white border-1 border-black"
+                  type="password"
+                  name="password"
+                  onChange={changed}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="name">Nombre</label>
                 <br />
-                <input className="bg-white border-1 border-black"type="text" name="name" onChange={changed} />
+                <input
+                  className="bg-white border-1 border-black"
+                  type="text"
+                  name="name"
+                  onChange={changed}
+                />
               </div>
               <input
                 type="submit"
