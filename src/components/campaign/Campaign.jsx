@@ -4,7 +4,7 @@ const api = import.meta.env.VITE_API_URL;
 export const Campaign = () => {
   const [templateHandled, setTemplateHandled] = useState([]);
   const [templateOwn, setTemplateOwn] = useState([]);
-  const [campaignDate, setCampaignDate] = useState({});
+  const [campaignDate, setCampaignDate] = useState([]);
 
   const navigate = useNavigate();
 
@@ -40,7 +40,6 @@ export const Campaign = () => {
     const response = await request.json();
 
     if (response.status === "success") {
-      console.log(response);
       setTemplateOwn(response.templates);
     }
   };
@@ -59,8 +58,8 @@ export const Campaign = () => {
     const response = await request.json();
 
     if (response.status === "success") {
-      setCampaignDate(response);
-      console.log(response);
+      console.log(response.campaign);
+      setCampaignDate(response.campaign);
     }
 
     return response;
@@ -117,7 +116,7 @@ export const Campaign = () => {
             </button>
         </div>
         <div>
-        {campaignDate && <button className="mt-2 ml-25 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600" onClick={() => navigate('/home/campaignstats')}>Tus campañas</button>}
+        {campaignDate.length > 0 && (<button className="mt-2 ml-25 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600" onClick={() => navigate('/home/campaignstats')}>Tus campañas</button>)}
         </div>
       </div>
       <div className="mt-5">

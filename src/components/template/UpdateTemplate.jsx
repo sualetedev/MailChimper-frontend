@@ -17,6 +17,7 @@ export const UpdateTemplate = () => {
   const [templateHandled, setTemplateHandled] = useState(null);
   const [audiences, setAudiences] = useState([]);
   const [selectedAudiences, setSelectedAudiences] = useState([]);
+  const [messageOk, setMessageOk] = useState([]);
 
   useEffect(() => {
     getTemplateById();
@@ -167,7 +168,9 @@ export const UpdateTemplate = () => {
         });
 
         const sendResponse = await sendRequest.json();
-        alert(sendResponse.message);
+        if( sendResponse.status === "success"){
+          setMessageOk(sendResponse.status);
+        }
 
         await fetch(`${api}/api/campaign/updateHtml/` + campaignId, {
           method: "PUT",
@@ -224,6 +227,13 @@ export const UpdateTemplate = () => {
           Enviar
         </button>
       </div>
+      {messageOk === "success" && (
+        <div className="flex justify-center items-center mt-4">
+          <strong className="text-green-700 font-bold ">
+            Mensaje enviado correctamente
+          </strong>
+        </div>
+      )}
 
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-2"> Introduce el asunto:</h3>
