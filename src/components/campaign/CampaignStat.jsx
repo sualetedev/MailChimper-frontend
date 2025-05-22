@@ -28,12 +28,10 @@ export const CampaignStat = () => {
   return (
     <div>
       <div>
-        <div>
-          <h1 className="text-4xl">Gráfico</h1>
-          <Graphic />
-        </div>
+        <h1 className="text-4xl">Gráfico</h1>
+        <Graphic />
       </div>
-      <div clasName="mt-20">
+      <div>
         <table className="border min-w-330">
           <thead className="border-b text-xl">
             <th>Nombre de la campaña</th>
