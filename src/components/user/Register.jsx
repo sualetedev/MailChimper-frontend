@@ -6,7 +6,11 @@ const secPassword = (password) => {
   return regex.test(password);
 };
 export const Register = () => {
-  const { form, changed, reset } = useForm({});
+  const { form, changed } = useForm({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [saved, setSaved] = useState("not sended");
   const [secured, setSecured] = useState("");
 
@@ -30,9 +34,9 @@ export const Register = () => {
     if (data.status === "success") {
       setSaved("saved");
       setSecured("");
-      reset();
     } else {
       setSaved("error");
+      setSecured("");
     }
   };
   return (
